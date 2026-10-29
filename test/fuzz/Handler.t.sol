@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Handler is going to narrrow down the wey we call function 
+// Handler is going to narrrow down the wey we call function
 
 pragma solidity ^0.8.18;
 
@@ -9,9 +9,8 @@ import {DecentralizedStableCoin} from "../../src/DecentralizedStableCoin.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/ERC20Mock.sol";
 import {MockV3Aggregator} from "../mocks/MockV3Aggregator.sol";
 
-
 contract Handler is Test {
-    DSCEngine dsce; 
+    DSCEngine dsce;
     DecentralizedStableCoin dsc;
 
     ERC20Mock weth;
@@ -41,7 +40,7 @@ contract Handler is Test {
         address sender = usersWithCollateralDeposited[addressSeed % usersWithCollateralDeposited.length];
         (uint256 totalDscMinted, uint256 collateralValueInUsd) = dsce.getAccountInformation(sender);
 
-        int256 maxDscToMint = (int256(collateralValueInUsd) /2) - int256(totalDscMinted);
+        int256 maxDscToMint = (int256(collateralValueInUsd) / 2) - int256(totalDscMinted);
         if (maxDscToMint < 0) {
             return;
         }
@@ -54,7 +53,6 @@ contract Handler is Test {
         vm.stopPrank();
         timesMintIsCalled++;
     }
-
 
     function depositCollateral(uint256 collateralSeed, uint256 amountCollateral) public {
         ERC20Mock collateral = _getCollateralFromSeed(collateralSeed);
@@ -70,7 +68,7 @@ contract Handler is Test {
 
     function redeemCollateral(uint256 collateralSeed, uint256 amountCollateral) public {
         ERC20Mock collateral = _getCollateralFromSeed(collateralSeed);
-        uint256 maxCollateralToRedeem = dsce.getCollateralBalanceOfUser(address(collateral),msg.sender);
+        uint256 maxCollateralToRedeem = dsce.getCollateralBalanceOfUser(address(collateral), msg.sender);
         amountCollateral = bound(amountCollateral, 0, maxCollateralToRedeem);
         if (amountCollateral == 0) {
             return;
@@ -84,10 +82,10 @@ contract Handler is Test {
     //     ethUsdPriceFeed.updateAnswer(newPriceInt);
     // }
 
-    //Helper Functions 
+    //Helper Functions
     function _getCollateralFromSeed(uint256 collateralSeed) private view returns (ERC20Mock) {
-        if (collateralSeed % 2 == 0){
-            return weth; 
+        if (collateralSeed % 2 == 0) {
+            return weth;
         }
         return wbtc;
     }

@@ -1,12 +1,11 @@
-// SPDX-License-Identifier: MIT 
+// SPDX-License-Identifier: MIT
 
 // Have our invariant aka properties
 
-// What are our invariants ? 
+// What are our invariants ?
 
-// 1. The total supply of DSC shuold be less than the total value of collateral 
+// 1. The total supply of DSC shuold be less than the total value of collateral
 // 2. Getter view functions should never revert <- evergreen invarant
-
 
 pragma solidity ^0.8.18;
 
@@ -26,17 +25,15 @@ contract OpenInvariantsTest is StdInvariant, Test {
     address weth;
     address wbtc;
 
-
-
-    function setUp() external{
+    function setUp() external {
         deployer = new DeployDSC();
         (dsc, dsce, config) = deployer.run();
-        (,, (weth),(wbtc),)= config.activeNetworkConfig();
+        (,, (weth), (wbtc),) = config.activeNetworkConfig();
         targetContract(address(dsce));
     }
 
     function invariant_protocolMustHaveMoreValueThanTotalSupply() public view {
-        // get the value of all the collateral in the protocol 
+        // get the value of all the collateral in the protocol
         // compare it to all the debt (dsc)
         uint256 totalSupply = dsc.totalSupply();
         uint256 totalWethDeposited = IERC20(weth).balanceOf(address(dsce));
@@ -49,6 +46,6 @@ contract OpenInvariantsTest is StdInvariant, Test {
         console.log("wbtc value: ", wbtcValue);
         console.log("total supply: ", totalSupply);
 
-        assert (wethValue + wbtcValue >= totalSupply);
+        assert(wethValue + wbtcValue >= totalSupply);
     }
 }
